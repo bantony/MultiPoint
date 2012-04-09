@@ -218,7 +218,7 @@ public class MultiPoint extends JApplet {
                     canvas.clearCanvas();
                 }
                 else{
-                    canvas.objectStack.remove(canvas.getSelectedShape());
+                    canvas.objectList.remove(canvas.getSelectedShape());
                     canvas.setSelectedShape(null);
                 }
                 
