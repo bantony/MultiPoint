@@ -22,6 +22,7 @@ public class MultiPoint extends JApplet {
     protected ToolList toolList;
     protected ToolBarView toolBar;
     protected MenuBarView menuBar;
+    
     private static AppCloser closer;
     private javax.swing.JPanel iconPanel;
     private javax.swing.JPanel canvasPanel;
@@ -33,6 +34,10 @@ public class MultiPoint extends JApplet {
     private javax.swing.JLabel iconLabel;
     private javax.swing.JLabel lineColorLabel;
     // start new
+    private javax.swing.JLabel goldLabel;
+    private javax.swing.JLabel greyLabel;
+    public StartupWindow sw;
+    public static boolean closeApplication = false;
     private javax.swing.JButton requestButton;
     private java.awt.ScrollPane slidePanel;
     private javax.swing.JLabel userLabel;
@@ -46,6 +51,16 @@ public class MultiPoint extends JApplet {
     /** Constructor for class ObjectDraw (when invoked as application)*/
     public MultiPoint(boolean isApplet) {
         this.isApplet = isApplet;
+        
+        sw = new StartupWindow();
+        
+        sw.setLocationRelativeTo(this);
+        sw.setVisible(true);
+        
+        if(closeApplication == true){
+            System.exit(1);
+        }
+        
         if (!isApplet) {
             initGUI();
         }
@@ -84,6 +99,7 @@ public class MultiPoint extends JApplet {
         // end new
 
         this.setBackground(Color.white);
+        
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         canvasPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -218,7 +234,7 @@ public class MultiPoint extends JApplet {
                     canvas.clearCanvas();
                 }
                 else{
-                    canvas.objectList.remove(canvas.getSelectedShape());
+                    canvas.objectStack.remove(canvas.getSelectedShape());
                     canvas.setSelectedShape(null);
                 }
                 
@@ -270,6 +286,11 @@ public class MultiPoint extends JApplet {
             }
         });
 
+        goldLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        goldLabel.setIcon(getImageIcon("UserGold.png")); 
+
+        greyLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        greyLabel.setIcon(getImageIcon("UserGrey.png")); 
         
         // end new
 
@@ -386,8 +407,6 @@ public class MultiPoint extends JApplet {
 
         
         // end new
-        
-        
       
     }
 
@@ -419,6 +438,16 @@ public class MultiPoint extends JApplet {
                 return null;
             return new ImageIcon(url);
         }
+    }
+    
+    private JLabel createGoldIcon(){
+        JLabel label = new JLabel(goldLabel.getIcon());
+        return label;
+    }
+
+    private JLabel createGreyIcon(){
+        JLabel label = new JLabel(greyLabel.getIcon());
+        return label;
     }
 
     protected ToolList createToolList() {
@@ -497,14 +526,14 @@ public class MultiPoint extends JApplet {
             public void run() {
                 JFrame frame = new JFrame();
                 MultiPoint od = new MultiPoint(false);
-                frame.setTitle("MiniPoint"); // ITER 4
+                frame.setTitle("MultiPoint"); // ITER 4
                 frame.getContentPane().setLayout(new BorderLayout());
                 frame.getContentPane().add(od, BorderLayout.CENTER);
                 frame.addWindowListener(closer);
                 frame.pack();
                 od.setVisible(true);
                 frame.setVisible(true);
-                frame.setMinimumSize(new java.awt.Dimension(650, 650));
+                frame.setResizable(false);
                 od.canvas.clearCanvas();
             }
         });

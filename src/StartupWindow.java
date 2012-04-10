@@ -40,8 +40,8 @@ public class StartupWindow extends javax.swing.JDialog {
 
 
     /** Creates new form StartupWindow */
-    public StartupWindow(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public StartupWindow() {
+        super();
         initComponents();
         userName.setEnabled(false);
         jStart.setEnabled(false);
@@ -401,7 +401,7 @@ public class StartupWindow extends javax.swing.JDialog {
     
     private void offlineActionPerformed(java.awt.event.ActionEvent evt){
         if (offlineBox.isSelected()) {
-            initServerOptions();
+            initOfflineOptions();
         } 
         else if (!offlineBox.isSelected()) {
             undoOfflineOptions();
@@ -448,27 +448,29 @@ public class StartupWindow extends javax.swing.JDialog {
             return;
         }
         
-        try {
-            port = Integer.parseInt(this.port.getText());
-            if (port < 65535 && port > 1000) {
-                //Do nothing
-            } else {
-                JOptionPane.showMessageDialog(this, "Port number must be above 1000 and below 65535.", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
+        if (offlineBox.isSelected() == false) {
+            try {
+                port = Integer.parseInt(this.port.getText());
+                if (port < 65535 && port > 1000) {
+                    //Do nothing
+                } else {
+                    JOptionPane.showMessageDialog(this, "Port number must be above 1000 and below 65535.", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid characters in \"Port\" field", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
+            }
+
+            if (port == -1) {
                 return;
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Invalid characters in \"Port\" field", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        if(port == -1){
-            return;
-        }
-        
-        //Test Port
-        //Test UN
-        if (userName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User must specify a username.", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
-            return;
+
+            //Test Port
+            //Test UN
+            if (userName.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "User must specify a username.", "jChat - Invaild Input", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
 
         //If no test throws an exception, close JDialog window
@@ -487,7 +489,7 @@ public class StartupWindow extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                StartupWindow dialog = new StartupWindow(new javax.swing.JFrame(), true);
+                StartupWindow dialog = new StartupWindow();
                 
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 

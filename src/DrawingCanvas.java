@@ -4,7 +4,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Stack;
@@ -25,7 +24,7 @@ public class DrawingCanvas extends JComponent {
   /* Class member variables */
   public MultiPoint od; // ITER 4
   private final Color background = Color.WHITE;
-  public ArrayList<ShapeClass> objectList;
+  public Stack<ShapeClass> objectStack;
   private ShapeClass selectedShape; // Keep a reference to selected shape.
   protected DrawingCanvasController DCcontroller;
   protected Image imageBuffer;
@@ -56,7 +55,7 @@ public class DrawingCanvas extends JComponent {
     setBackground(background);
     DCcontroller = createDrawingCanvasController();
     addDrawingCanvasListener(DCcontroller);
-    objectList = new ArrayList<ShapeClass>();   // create a new objectList
+    objectStack = new Stack<ShapeClass>();   // create a new objectStack
     selectedShape = null;
     
   }
@@ -93,11 +92,11 @@ public class DrawingCanvas extends JComponent {
    * @see javax.swing.JComponent#paint(java.awt.Graphics)
    */
   public void paint(Graphics g) {
-     // Create iterate to iterate through the objectList in canvas
-     Iterator shapeIter = objectList.iterator();
+     // Create iterate to iterate through the objectStack in canvas
+     Iterator shapeIter = objectStack.iterator();
      ShapeClass curShape;   // Create a temperary shape 
 
-     // Iterate through objectList and draw all shapes to imageBuffer
+     // Iterate through objectStack and draw all shapes to imageBuffer
      while(shapeIter.hasNext())
      {
          // Try drawing ShapeClass onto canvas
@@ -190,7 +189,7 @@ public class DrawingCanvas extends JComponent {
     selectedShape = null;
     
     // Clear all the objects in the list
-    objectList.clear();
+    objectStack.clear();
     
     // Clear and reset the imageBuffer
     clearImageBuffer();
@@ -300,10 +299,10 @@ public class DrawingCanvas extends JComponent {
   // Function to add a shape to 
   public void addShape(ShapeClass s){
       //Push object into stack
-      objectList.add(s);
+      objectStack.add(s);
       
       // Debug use print stack number
-      System.out.println("objectStack has "+objectList.size());
+      System.out.println("objectStack has "+objectStack.size());
       
       // Repaint canvas with new shape added
       repaint();
@@ -314,7 +313,7 @@ public class DrawingCanvas extends JComponent {
   {
       ShapeClass s = null;
       // Get new list iterator for object stack
-      ListIterator l = objectList.listIterator();
+      ListIterator l = objectStack.listIterator();
       
       // Iterate through current list to see if a point is selected
       while(l.hasNext())
@@ -378,13 +377,13 @@ public class DrawingCanvas extends JComponent {
   public ShapeClass updateSelectedShape(ShapeClass s)
   {
       //Remove the current referenced selected shape from the object stack
-      objectList.remove(selectedShape);
+      objectStack.remove(selectedShape);
       
       // Set the transfomed shape to selected shape
       setSelectedShape(s);
       
       // add the new transformed shape to the object stack
-      objectList.add(s);
+      objectStack.add(s);
       
       // return reference of new shape
       return selectedShape;
